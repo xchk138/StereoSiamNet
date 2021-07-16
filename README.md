@@ -1,2 +1,2 @@
-# StereoSiameseLearning
-SSL: Stereo Siamese Learning
+# StereoSiamNet
+SSN: Stereo Siamese Net
