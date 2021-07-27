@@ -20,7 +20,8 @@ import torch.optim
 def train_ssn(model_path, model_name, data_path):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print(device)
-    net_ = StereoSiamNet()
+    #net_ = StereoSiamNet()
+    net_ = torch.load('ssn_bremen-cross_decoding-150.pth')
     net_ = net_.to(device)
     #print(net_.dump_info())
     loss_fn = nn.SmoothL1Loss(reduction='mean')
@@ -28,18 +29,20 @@ def train_ssn(model_path, model_name, data_path):
     #print(net_.parameters)
     opt_ = torch.optim.Adam(net_.parameters(), lr=learning_rate)
     num_epoch = 2000
-    batch_size = 8
-    print_freq = 100
-    save_freq = 50
+    batch_size = 8 #8
+    print_freq = 100 #100
+    save_freq = 50 # 50
     # load dataset
-    data_loader = PairedGraySet('E:/Gits/Datasets/SSN/Bremen/', num_epoch, batch_size)
+    data_loader = PairedGraySet('../Datasets/SSN/Bremen/', num_epoch, batch_size)
     net_.train()
     counter_ = 0
     for i_epo, i_itr, im1, im2 in data_loader:
+        if im1 is None or im2 is None:
+            break
         counter_ += 1
         x1 = torch.Tensor(im1).to(device)
         x2 = torch.Tensor(im2).to(device)
-        x1r, x2r = net_(x1, x2)
+        x1r, x2r, _, _ = net_(x1, x2)
         loss_ = loss_fn(x1, x1r) + loss_fn(x2, x2r)
         opt_.zero_grad()
         loss_.backward()

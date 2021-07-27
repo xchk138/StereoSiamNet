@@ -9,9 +9,10 @@ from collections import Iterator
 max_image_size = (640, 480)
 
 class PairedGraySet(Iterator):
-    def __init__(self, root_path, num_epoc, batch_size):
+    def __init__(self, root_path, num_epoc, batch_size, shuffle=True):
         self.batch_size = batch_size
         self.num_epoc = num_epoc
+        self.shuffle = shuffle
         self.epoc = 0
         self.iter = 0
         self.im1 = None
@@ -43,7 +44,10 @@ class PairedGraySet(Iterator):
         self.max_iter = self.num_samples // self.batch_size
 
         # the first index sequence
-        self.ind_seq = np.random.permutation(np.arange(start=0, stop=self.num_samples))
+        if self.shuffle:
+            self.ind_seq = np.random.permutation(np.arange(start=0, stop=self.num_samples))
+        else:
+            self.ind_seq = np.arange(start=0, stop=self.num_samples)
         # preallocation for speed
         h, w = self.images_main[0].shape
         self.im1 = np.zeros([self.batch_size, 1, h, w], np.float32)
@@ -68,5 +72,6 @@ class PairedGraySet(Iterator):
             self.epoc += 1
             self.iter = 0
             # shuffle the index sequence
-            self.ind_seq = np.random.permutation(np.arange(start=0, stop=self.num_samples))
+            if self.shuffle:
+                self.ind_seq = np.random.permutation(np.arange(start=0, stop=self.num_samples))
         return cur_epoc, cur_iter, self.im1, self.im2

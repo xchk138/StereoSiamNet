@@ -99,21 +99,19 @@ class StereoSiamNet(nn.Module):
             # generate AdaIN parameters
             fc_miu = nn.Sequential(
                 nn.Linear(style_encoder_config[-1][0], 64, True),
-                nn.Tanh(),
+                nn.LeakyReLU(0.01),
                 nn.Linear(64, 32, True),
-                nn.Tanh(),
-                nn.Linear(32, chn_last, True),
-                nn.Tanh()
+                nn.LeakyReLU(0.01),
+                nn.Linear(32, chn_last, True)
             )
             self.decoder_miu.append(fc_miu)
 
             fc_sigma = nn.Sequential(
                 nn.Linear(style_encoder_config[-1][0], 64, True),
-                nn.Tanh(),
+                nn.LeakyReLU(0.01),
                 nn.Linear(64, 32, True),
-                nn.Tanh(),
-                nn.Linear(32, chn_last, True),
-                nn.Tanh()
+                nn.LeakyReLU(0.01),
+                nn.Linear(32, chn_last, True)
             )
             self.decoder_sigma.append(fc_sigma)
 
@@ -124,21 +122,19 @@ class StereoSiamNet(nn.Module):
             # generate AdaIN parameters
             fc_miu = nn.Sequential(
                 nn.Linear(style_encoder_config[-1][0], 64, True),
-                nn.Tanh(),
+                nn.LeakyReLU(0.01),
                 nn.Linear(64, 32, True),
-                nn.Tanh(),
-                nn.Linear(32, decoder_config[i][0], True),
-                nn.Tanh()
+                nn.LeakyReLU(0.01),
+                nn.Linear(32, decoder_config[i][0], True)
             )
             self.decoder_miu.append(fc_miu)
 
             fc_sigma = nn.Sequential(
                 nn.Linear(style_encoder_config[-1][0], 64, True),
-                nn.Tanh(),
+                nn.LeakyReLU(0.01),
                 nn.Linear(64, 32, True),
-                nn.Tanh(),
-                nn.Linear(32, decoder_config[i][0], True),
-                nn.Tanh()
+                nn.LeakyReLU(0.01),
+                nn.Linear(32, decoder_config[i][0], True)
             )
             self.decoder_sigma.append(fc_sigma)
 
@@ -189,7 +185,7 @@ class StereoSiamNet(nn.Module):
             else:
                 x2r = self.mix_style(x2r, miu2, sigma2)
             x2r = self.decoder_layers[i](x2r)
-        return x1r, x2r
+        return x1r, x2r, t1, t2
 
     def dump_info(self):
         return {
