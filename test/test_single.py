@@ -64,8 +64,8 @@ def test_ssn(model_path, data_path, save_path):
         t2 = np.uint8(np.maximum(0, np.minimum(255, t2))[0,0])
 
         # save texture map
-        cv2.imwrite(save_path + '/%d_t1.png' % counter_, t1)
-        cv2.imwrite(save_path + '/%d_t2.png' % counter_, t2)
+        cv2.imwrite(save_path + '/%08d_t1.png' % counter_, t1)
+        cv2.imwrite(save_path + '/%08d_t2.png' % counter_, t2)
         
         # save reconstructed 
         x1_np = np.uint8(im1[0,0])
@@ -73,10 +73,10 @@ def test_ssn(model_path, data_path, save_path):
         x1r_np = np.uint8(x1r[0,0])
         x2r_np = np.uint8(x2r[0,0])
 
-        cv2.imwrite(save_path + '/%d_x1o.png'%counter_, x1_np)
-        cv2.imwrite(save_path + '/%d_x2o.png'%counter_, x2_np)
-        cv2.imwrite(save_path + '/%d_x1r.png'%counter_, x1r_np)
-        cv2.imwrite(save_path + '/%d_x2r.png'%counter_, x2r_np)
+        cv2.imwrite(save_path + '/%08d_x1o.png'%counter_, x1_np)
+        cv2.imwrite(save_path + '/%08d_x2o.png'%counter_, x2_np)
+        cv2.imwrite(save_path + '/%08d_x1r.png'%counter_, x1r_np)
+        cv2.imwrite(save_path + '/%08d_x2r.png'%counter_, x2r_np)
         
         '''
         # save the change of pixels
@@ -84,14 +84,14 @@ def test_ssn(model_path, data_path, save_path):
         x2_ratio = np.float32(x2r_np) / np.float32(np.maximum(x1_np, 1))
         x1_ratio = np.uint8(x1_ratio * 100 / np.mean(x1_ratio))
         x2_ratio = np.uint8(x2_ratio * 100 / np.mean(x2_ratio))
-        cv2.imwrite('test_result/%d_x1_ratio.png'%counter_, x1_ratio)
-        cv2.imwrite('test_result/%d_x2_ratio.png'%counter_, x2_ratio)
+        cv2.imwrite('test_result/%08d_x1_ratio.png'%counter_, x1_ratio)
+        cv2.imwrite('test_result/%08d_x2_ratio.png'%counter_, x2_ratio)
         
         # save the bias
         x1_bias = np.uint8(np.abs(x1r_np - x2_np)) * 8
         x2_bias = np.uint8(np.abs(x2r_np - x1_np)) * 8
-        cv2.imwrite('test_result/%d_x1_bias.png'%counter_, x1_bias)
-        cv2.imwrite('test_result/%d_x2_bias.png'%counter_, x2_bias)
+        cv2.imwrite('test_result/%08d_x1_bias.png'%counter_, x1_bias)
+        cv2.imwrite('test_result/%08d_x2_bias.png'%counter_, x2_bias)
         '''
     # print the final statistics
     print("loss_o: %8.5f +/- %8.5f" % (np.array(loss_o).mean(), np.array(loss_o).std()))
